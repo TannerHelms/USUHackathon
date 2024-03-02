@@ -19,7 +19,7 @@ function Queue() {
 
   // Set the socket up
   useEffect(() => {
-    const s = io();
+    const s = io("http://129.123.181.235:8080");
     setSocket(s);
     return () => {
       s.disconnect();
@@ -44,8 +44,13 @@ function Queue() {
   };
 
   return (
-    <section className={classes.container}>
-      <h1>Counter: {counter}</h1>
+    <section className="flex col g-20 bg-white p-10 br ycenter xcenter">
+      <p className="center">
+        {socket
+          ? "Socket: succesfully connected to server"
+          : "Socket: Failed to connect"}
+      </p>
+      <h1 className="center">Counter: {counter}</h1>
       <button onClick={increment}>Inc</button>
     </section>
   );

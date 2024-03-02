@@ -17,6 +17,12 @@ function Home() {
     }
   };
 
+  // THIS IS TO BYPASS THE USERNAME SCREEN
+  useEffect(() => {
+    context.setUsername("ADMIN");
+    navigate("/queue");
+  }, []);
+
   return (
     <div className="flex col bg-white br p-40 g-20">
       <h1>Enter a Username</h1>
