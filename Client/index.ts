@@ -18,6 +18,20 @@ const io = new Server(server);
 io.on("connection", (socket) => {
   console.log("Connection recieved!");
 
+socket.on("message", (data) => {
+    console.log(data)
+  })
+
+  socket.on("player", (data) => {
+    console.log(data);
+    io.emit(data, '')
+  })
+
+  socket.on("move", (data) => {
+    console.log("recevied move")
+    io.emit("move", data)
+  })
+
   socket.emit("new state", COUNT);
   socket.id
   socket.on("disconnect", () => {
