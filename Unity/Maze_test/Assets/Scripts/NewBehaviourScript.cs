@@ -5,6 +5,7 @@ using SocketIOClient.Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
+using System.Security.Cryptography;
 
 public class NewBehaviourScript : MonoBehaviour
 {
@@ -27,42 +28,65 @@ public class NewBehaviourScript : MonoBehaviour
         };
 
         socket.Connect();
-        socket.On("Left", data => {
-             moveLeft = true;
-        });
-        
-        socket.On("Right", data => {
-             moveRight = true;
+        socket.On("Left", response => {
+            if (response.GetValue<string>() == player.id)
+            {
+                moveLeft = true;
+            }
         });
 
-        socket.On("Up", data => {
-             moveUp = true;
+        
+        socket.On("Right", response => {
+            if (response.GetValue<string>() == player.id)
+            {
+                moveRight = true;
+            }
+        });
+
+        socket.On("Up", response => {
+            if (response.GetValue<string>() == player.id)
+            {
+                moveUp = true;
+            }
         });
         
-        socket.On("Down", data => {
-             moveDown = true;
+        socket.On("delete", response => {
+            Debug.Log("Deleting Playere");
+            if (response.GetValue<string>() == player.id)
+            {
+                Destroy(player);
+            }
+        });
+
+        socket.On("Down", response => {
+            if (response.GetValue<string>() == player.id)
+            {
+                moveDown = true;
+            }
         });
     }
+
+    private int speed = 15;
 
     void Update()
     {
         if (moveUp) {
-            transform.Translate(0, 5 * Time.deltaTime, 0, 0);
+            transform.Translate(0, speed * Time.deltaTime, 0, 0);
             moveUp = false;
         }
 
         if (moveLeft) {
-            transform.Translate(-5 * Time.deltaTime, 0, 0);
+            transform.Translate(-speed * Time.deltaTime, 0, 0);
             moveLeft = false;
         }
 
         if (moveRight) {
-            transform.Translate(5 * Time.deltaTime, 0, 0);
+            transform.Translate(speed * Time.deltaTime, 0, 0);
             moveRight = false;
         }
 
         if (moveDown) {
-            transform.Translate(0, -5 * Time.deltaTime, 0, 0);
+            transform.Translate(0, -speed * Time.deltaTime, 0, 0);
             moveDown = false;
         }
         // Input handling for moving the player

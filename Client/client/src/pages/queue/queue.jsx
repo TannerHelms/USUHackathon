@@ -3,6 +3,7 @@ import AppContext from "../../utils/context";
 import classes from "./Queue.module.css";
 import { useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import uuid from "react-uuid";
 
 function Queue() {
   const context = useContext(AppContext);
@@ -14,7 +15,7 @@ function Queue() {
   const [left, setLeft] = useState(false);
   const [right, setRight] = useState(false);
   const [down, setDown] = useState(false);
-  const timeout = 50;
+  const timeout = 150;
 
   // If there is no username, navigate home
   useEffect(() => {
@@ -27,7 +28,7 @@ function Queue() {
   useEffect(() => {
     const s = io("http://129.123.181.235:8080");
     setSocket(s);
-
+    s.emit("setId", uuid());
     return () => {
       s.disconnect();
     };
@@ -60,18 +61,18 @@ function Queue() {
   };
 
   const moveUp = () => {
-    socket.emit("player", "Up");
+    socket.emit("Up");
   };
 
   const moveDown = () => {
-    socket.emit("player", "Down");
+    socket.emit("Down");
   };
   const moveLeft = () => {
-    socket.emit("player", "Left");
+    socket.emit("Left");
   };
 
   const moveRight = () => {
-    socket.emit("player", "Right");
+    socket.emit("Right");
   };
 
   useEffect(() => {
@@ -148,6 +149,10 @@ function Queue() {
     };
   }, []);
 
+  const newPlayer = () => {
+    socket.emit("createPlayer");
+  };
+
   return (
     <section className="flex col g-20 bg-white p-10 br ycenter xcenter">
       {moves.map((move, idx) => {
@@ -164,6 +169,7 @@ function Queue() {
       <button onClick={moveDown}>Move Down</button>
       <button onClick={moveLeft}>Move Left</button>
       <button onClick={moveRight}>Move Right</button>
+      <button onClick={newPlayer}>New Player</button>
     </section>
   );
 }

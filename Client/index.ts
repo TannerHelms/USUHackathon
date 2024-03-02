@@ -4,6 +4,7 @@ import { createServer } from "node:http";
 import { Server } from "socket.io";
 import fs from "fs";
 import * as dotenv from "dotenv";
+
 dotenv.config();
 
 let COUNT = 0;
@@ -16,41 +17,39 @@ const server = createServer(app);
 const io = new Server(server);
 
 io.on("connection", (socket) => {
+  let id = '';
   console.log("Connection recieved!");
 
-socket.on("message", (data) => {
-    console.log(data)
+  socket.on("setId", (data) => {
+    id = data;
   })
 
-  socket.on("player", (data) => {
-    console.log(data);
-    io.emit(data, '')
+  socket.on("Up", () => {
+    console.log(`Up ${id}`)
+    io.emit("Up", id)
+  })
+  socket.on("Down", () => {
+    console.log(`Down ${id}`)
+    io.emit("Down", id)
+  })
+  socket.on("Left", () => {
+    console.log(`Left ${id}`)
+    io.emit("Left", id)
+  })
+  socket.on("Right", () => {
+    console.log(`Right ${id}`)
+    io.emit("Right", id)
   })
 
-  socket.on("move", (data) => {
-    console.log("recevied move")
-    io.emit("move", data)
+  socket.on("createPlayer", () => {
+    console.log(`creating new player... ${id}`)
+    io.emit("newPlayer", id);
   })
 
-  socket.emit("new state", COUNT);
-  socket.id
+
   socket.on("disconnect", () => {
-    console.log("Client disconnected!")
-  });
-
-  socket.on("increment", (data) => {
-    COUNT++;
-    io.emit("new state", COUNT);
-  });
-
-  socket.on("quote", (data) => {
-    console.log("quote requested");
-    socket.broadcast.emit("notification", "User requested a quote");
-  })
-
-  socket.on("decrement", () => {
-    COUNT--;
-    io.emit("new state", COUNT);
+    console.log(`client left the server ${id}`);
+    io.emit("delete", id)
   });
 });
 

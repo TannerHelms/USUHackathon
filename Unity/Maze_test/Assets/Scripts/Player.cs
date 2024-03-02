@@ -1,8 +1,12 @@
 using UnityEngine;
+using SocketIOClient;
+using SocketIOClient.Newtonsoft.Json;
+using System;
 
 public class Player : MonoBehaviour
 {
-    float speed = 5.0f;
+    float speed = 10.0f;
+    public string id = string.Empty;
 
     public void MoveUp()
     {
