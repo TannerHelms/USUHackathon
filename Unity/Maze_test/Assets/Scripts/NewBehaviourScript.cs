@@ -1,42 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using SocketIOClient;
+
 public class NewBehaviourScript : MonoBehaviour
 {
-    // Start is called before the first frame update
+    Player player = null; // Reference to the Player component
+
     void Start()
     {
-
+        player = GetComponent<Player>(); // Get the Player component attached to this GameObject
     }
 
-    float speed = 5.0f;
-    // Update is called once per frame
     void Update()
     {
+        // Input handling for moving the player
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.Translate(-5 * Time.deltaTime, 0, 0);
+            player.MoveLeft();
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.Translate(5 * Time.deltaTime, 0, 0);
-        }
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            transform.Translate(0, 5 * Time.deltaTime, 0, 0);
-        }
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            transform.Translate(0, -5 * Time.deltaTime, 0, 0);
+            player.MoveRight();
         }
 
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            player.MoveUp();
+        }
+
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            player.MoveDown();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Walls")
+        if (collision.gameObject.tag == "Walls")
         {
             Debug.Log("Wall hit");
         }
